@@ -10,11 +10,13 @@ import { FormInput } from "@/components/forms/form-input";
 import { useTransition } from "react";
 import { login } from "@/actions/login.action";
 import { toast } from "sonner";
-import { sign } from "crypto";
-import { signIn } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 export const LoginForm = function () {
   const [isPending, startTransition] = useTransition();
+  const searchParams = useSearchParams();
+  const callBackUrl = searchParams.get("callbackUrl");
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -26,7 +28,7 @@ export const LoginForm = function () {
 
   async function onSubmit(values: z.infer<typeof loginSchema>) {
     startTransition(async () => {
-      const result = await login(values);
+      const result = await login(values, callBackUrl);
 
       if (result?.error) toast.error(result.error);
     });
@@ -53,7 +55,10 @@ export const LoginForm = function () {
           type="password"
         />
 
-        <Button disabled={isPending}>Iniciar Sesión</Button>
+        <Button disabled={isPending}>
+          {isPending && <Loader2 className="animate-spin mr-2" size={20} />}
+          Iniciar Sesión
+        </Button>
       </form>
     </Form>
   );
