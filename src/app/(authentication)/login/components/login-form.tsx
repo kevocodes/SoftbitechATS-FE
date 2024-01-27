@@ -7,8 +7,15 @@ import { loginSchema } from "@/schemas/login.schema";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FormInput } from "@/components/forms/form-input";
+import { useTransition } from "react";
+import { login } from "@/actions/login.action";
+import { toast } from "sonner";
+import { sign } from "crypto";
+import { signIn } from "next-auth/react";
 
 export const LoginForm = function () {
+  const [isPending, startTransition] = useTransition();
+
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -17,8 +24,12 @@ export const LoginForm = function () {
     },
   });
 
-  function onSubmit(values: z.infer<typeof loginSchema>) {
-    alert("values: " + JSON.stringify(values, null, 2));
+  async function onSubmit(values: z.infer<typeof loginSchema>) {
+    startTransition(async () => {
+      const result = await login(values);
+
+      if (result?.error) toast.error(result.error);
+    });
   }
 
   return (
@@ -42,7 +53,7 @@ export const LoginForm = function () {
           type="password"
         />
 
-        <Button>Iniciar Sesión</Button>
+        <Button disabled={isPending}>Iniciar Sesión</Button>
       </form>
     </Form>
   );
