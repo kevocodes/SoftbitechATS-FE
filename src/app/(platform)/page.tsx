@@ -1,16 +1,14 @@
 import { logout } from "@/actions/logout.action";
-import { auth } from "@/auth";
+import { Button } from "@/components/ui/button";
+import { PageContainer } from "./components/page-container";
 
 async function Home() {
-  const session = await auth();
-
   return (
-    <div>
-      <h1>{JSON.stringify(session?.user)}</h1>
+    <PageContainer>
       <form action={logout}>
-        <button type="submit">Logout</button>
+        <Button type="submit">Logout</Button>
       </form>
-    </div>
+    </PageContainer>
   );
 }
 
