@@ -1,6 +1,6 @@
-import { Laptop, Settings } from "lucide-react";
+import { Laptop, LogOut } from "lucide-react";
 import { useSidebar } from "@/stores/sidebar.store";
-import { SidebarItem } from "./sidebar-item";
+import { SidebarItem, SidebarItemLogout } from "./sidebar-item";
 
 interface SidebarContentProps {
   isMobile?: boolean;
@@ -12,16 +12,13 @@ export const SidebarContent = ({ isMobile }: SidebarContentProps) => {
 
   return (
     <>
-      <SidebarItem label="Dashboard" to="/" isSidebarOpen={isSidebarOpen}>
+      <SidebarItem label="Tecnologías" to="/" isSidebarOpen={isSidebarOpen}>
         <Laptop size={24} />
       </SidebarItem>
-      <SidebarItem
-        label="Settings"
-        to="/settings"
-        isSidebarOpen={isSidebarOpen}
-      >
-        <Settings size={24} />
-      </SidebarItem>
+
+      <SidebarItemLogout label="Cerrar sesión" isSidebarOpen={isSidebarOpen}>
+        <LogOut size={24} />
+      </SidebarItemLogout>
     </>
   );
 };

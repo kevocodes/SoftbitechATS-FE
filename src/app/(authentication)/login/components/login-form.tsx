@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FormInput } from "@/components/forms/form-input";
 import { useTransition } from "react";
-import { login } from "@/actions/login.action";
+import { login } from "@/actions/auth/login.action";
 import { toast } from "sonner";
 import { useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";

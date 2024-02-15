@@ -7,7 +7,7 @@ export const SidebarHeader = () => {
 
   return (
     <div className="flex justify-between items-center">
-      <p className={cn("text-2xl font-bold block", !isOpen && "hidden")}>
+      <p className={cn("text-xl font-bold block", !isOpen && "hidden")}>
         Menú
       </p>
       <SidebarCollapseButton />

@@ -8,14 +8,13 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { loginSchema } from "@/schemas/login.schema";
 import { InputHTMLAttributes } from "react";
 
 interface FormInputProps {
-  control: Control<z.infer<typeof loginSchema>>;
-  name: UseControllerProps<z.infer<typeof loginSchema>>["name"];
+  control: any;
+  name: string;
   placeholder: string;
-  label: string;
+  label?: string;
   type?: InputHTMLAttributes<HTMLInputElement>["type"];
 }
 
@@ -32,9 +31,9 @@ export const FormInput = ({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>{label}</FormLabel>
+          {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
-            <Input placeholder={placeholder} {...field} type={type}/>
+            <Input placeholder={placeholder} {...field} type={type} />
           </FormControl>
           <FormMessage />
         </FormItem>
