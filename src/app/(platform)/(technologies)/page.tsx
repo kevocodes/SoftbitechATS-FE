@@ -1,8 +1,9 @@
+import prisma from "@/lib/prisma"
 import { PageContainer } from "../components/page-container";
 import { AddTechnology } from "./components/add-technology";
 
 async function Home() {
-  const technologies = await prisma?.technology.findMany();
+  const technologies = await prisma.technology.findMany();
 
   return (
     <PageContainer>
