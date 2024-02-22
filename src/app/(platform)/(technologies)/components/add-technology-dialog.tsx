@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { AddTechnologyForm } from "./add-technology-form";
 import { useTechnologyModal } from "@/stores/technology-modal";
 
-export const AddTechnology = () => {
+export const AddTechnologyDialog = () => {
   const isOpen = useTechnologyModal((state) => state.isOpen);
   const toggle = useTechnologyModal((state) => state.toggle);
 

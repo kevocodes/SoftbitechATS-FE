@@ -16,14 +16,14 @@ export const Dropzone = ({ form }: DropzoneProps) => {
       maxFiles={1}
       accept={{
         "image/png": [],
-        "image/jpg": [],
-        "image/jpeg": [],
         "image/webp": [],
+        "image/jpeg": [],
+        "image/jpg": [],
       }}
       onDrop={(acceptedFiles, rejectedFileas) => {
         if (rejectedFileas.length > 0) {
           toast.error(
-            "Solo se permiten imágenes en formato png, jpg, jpeg o webp)"
+            "Solo se permiten imágenes en formato jpg, jpeg, png o webp"
           );
           return;
         }
