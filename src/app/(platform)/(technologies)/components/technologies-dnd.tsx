@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   DndContext,
   DragEndEvent,
@@ -18,6 +18,7 @@ import {
   SortableContext,
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
+import prisma from "@/lib/prisma";
 import { Technology } from "@prisma/client";
 import { TechnologiesDndItem } from "./technologies-dnd-item";
 import { TechnologiesDndItemOverlay } from "./technologies-dnd-item-overlay";
@@ -29,7 +30,14 @@ interface TechnologiesDndProps {
 }
 
 export const TechnologiesDnd = ({ data }: TechnologiesDndProps) => {
+  // Avoid warnings on SSR because of the use of `document`
   const isMounted = useComponentMounted();
+
+  // Update the technologies when the data changes from the parent SSR response on add or delete
+  useEffect(() => {
+    setTechnologies(data);
+  }, [data]);
+
   const [activeId, setActiveId] = useState<null | UniqueIdentifier>(null);
   const [technologies, setTechnologies] = useState(data);
 
@@ -58,12 +66,13 @@ export const TechnologiesDnd = ({ data }: TechnologiesDndProps) => {
           (technology) => technology.id === over?.id
         );
 
+        
+        
         return arrayMove(technologies, oldIndex, newIndex);
       });
     }
   };
 
-  
   return (
     <DndContext
       sensors={sensors}
@@ -75,18 +84,21 @@ export const TechnologiesDnd = ({ data }: TechnologiesDndProps) => {
         {technologies?.map((technology) => (
           <TechnologiesDndItem key={technology.id} technology={technology} />
         ))}
-        {isMounted &&  createPortal(
-          <DragOverlay>
-            {activeId ? (
-              <TechnologiesDndItemOverlay
-                technology={technologies.find(
-                  (technology) => technology.id === activeId
-                )!}
-              />
-            ) : null}
-          </DragOverlay>,
-          document.body
-        )}
+        {isMounted &&
+          createPortal(
+            <DragOverlay>
+              {activeId ? (
+                <TechnologiesDndItemOverlay
+                  technology={
+                    technologies.find(
+                      (technology) => technology.id === activeId
+                    )!
+                  }
+                />
+              ) : null}
+            </DragOverlay>,
+            document.body
+          )}
       </SortableContext>
     </DndContext>
   );

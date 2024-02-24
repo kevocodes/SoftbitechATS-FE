@@ -3,6 +3,7 @@
 import cloudinary from "@/lib/cloudinary";
 import { UploadApiResponse } from "cloudinary";
 import { revalidatePath } from "next/cache";
+import prisma from "@/lib/prisma";
 
 export const createTechnology = async (formData: FormData) => {
   const image = formData.get("image") as File;
@@ -33,15 +34,30 @@ export const createTechnology = async (formData: FormData) => {
 
     if (!uploadResult) return { error: "Error al crear la tecnología" };
 
-    await prisma?.technology.create({
+    const lastOrder = await prisma.technology.findFirst({
+      select: {
+        order: true,
+      },
+      orderBy: [
+        {
+          order: "desc",
+        },
+      ],
+    });
+
+    if (!lastOrder) return { error: "Error al crear la tecnología" };
+
+    await prisma.technology.create({
       data: {
         image: uploadResult.secure_url,
+        order: lastOrder.order + 1,
       },
     });
 
     revalidatePath("/");
     return { succes: "Tecnología agregada con éxito" };
   } catch (error) {
+    console.error(error);
     return { error: "Error al crear la tecnología" };
   }
 };

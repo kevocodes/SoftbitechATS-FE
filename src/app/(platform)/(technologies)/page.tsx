@@ -4,7 +4,9 @@ import { AddTechnologyDialog } from "./components/add-technology-dialog";
 import { TechnologiesDnd } from "./components/technologies-dnd";
 
 async function Home() {
-  const technologies = await prisma.technology.findMany();
+  const technologies = await prisma.technology.findMany({
+    orderBy: [{ order: "asc" }],
+  });
 
   return (
     <PageContainer>

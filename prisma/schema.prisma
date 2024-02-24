@@ -8,20 +8,23 @@ datasource db {
 }
 
 model User {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  email     String  @unique
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
   password  String
   name      String
   lastname  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
   @@map("users")
 }
 
 model Technology {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  image      String
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  order     Int      @default(0)
+  image     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
   @@map("technologies")
 }
