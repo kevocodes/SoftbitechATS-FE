@@ -10,9 +10,14 @@ async function Home() {
 
   return (
     <PageContainer>
-      <div className="flex justify-between items-center w-full">
-        <h2 className="text-xl font-bold">Tecnologías</h2>
-
+      <div className="flex flex-col sm:flex-row justify-between items-start w-full gap-3">
+        <div>
+          <h2 className="text-xl font-bold">Tecnologías</h2>
+          <h3 className="text-muted-foreground pt-1 text-balance">
+            Para reordenar las tecnologías solo debes agarrar una y soltarla en
+            su nueva posición.
+          </h3>
+        </div>
         <AddTechnologyDialog />
       </div>
 

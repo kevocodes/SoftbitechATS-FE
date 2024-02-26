@@ -18,7 +18,7 @@ export const AddTechnologyDialog = () => {
   return (
     <Dialog open={isOpen} onOpenChange={toggle}>
       <DialogTrigger asChild>
-        <Button className="text-base flex justify-center items-center gap-2">
+        <Button className="w-full sm:w-fit text-base flex justify-center items-center gap-2">
           Añadir
           <Plus size={24} />
         </Button>

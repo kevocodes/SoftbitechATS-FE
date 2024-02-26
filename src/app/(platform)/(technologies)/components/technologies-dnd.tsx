@@ -18,12 +18,12 @@ import {
   SortableContext,
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
-import prisma from "@/lib/prisma";
 import { Technology } from "@prisma/client";
 import { TechnologiesDndItem } from "./technologies-dnd-item";
 import { TechnologiesDndItemOverlay } from "./technologies-dnd-item-overlay";
 import { createPortal } from "react-dom";
 import { useComponentMounted } from "@/hooks/useComponentMounted";
+import { reorderTechnologies } from "@/actions/technologies/reorder-techonologies.action";
 
 interface TechnologiesDndProps {
   data: Technology[];
@@ -38,8 +38,9 @@ export const TechnologiesDnd = ({ data }: TechnologiesDndProps) => {
     setTechnologies(data);
   }, [data]);
 
-  const [activeId, setActiveId] = useState<null | UniqueIdentifier>(null);
   const [technologies, setTechnologies] = useState(data);
+
+  const [activeId, setActiveId] = useState<null | UniqueIdentifier>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -54,22 +55,26 @@ export const TechnologiesDnd = ({ data }: TechnologiesDndProps) => {
     setActiveId(active.id);
   };
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (active.id !== over?.id) {
-      setTechnologies((technologies) => {
-        const oldIndex = technologies.findIndex(
-          (technology) => technology.id === active.id
-        );
-        const newIndex = technologies.findIndex(
-          (technology) => technology.id === over?.id
-        );
+    if (active.id === over?.id) return;
 
-        
-        
-        return arrayMove(technologies, oldIndex, newIndex);
-      });
+    const oldIndex = technologies.findIndex(
+      (technology) => technology.id === active.id
+    );
+    const newIndex = technologies.findIndex(
+      (technology) => technology.id === over?.id
+    );
+
+    // Optimistic update
+    setTechnologies((technologies) => arrayMove(technologies, oldIndex, newIndex));
+
+    const { error } = await reorderTechnologies(String(active.id), oldIndex, newIndex);
+
+    if (error) {
+      // Revert the optimistic update
+      setTechnologies(data);
     }
   };
 
